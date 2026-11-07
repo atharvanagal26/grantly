@@ -21,19 +21,16 @@ const devOrigins = new Set([
 
 app.disable('x-powered-by');
 
-// Apply CORS handling to API requests only—not JS, CSS, or other static assets.
+// CORS applies only to API routes, not JavaScript, CSS, or other static assets.
 app.use('/api', (req, res, next) => {
   const origin = req.get('origin');
-
   let isSameOrigin = false;
 
   if (origin) {
     try {
       const parsedOrigin = new URL(origin);
-      const requestHost = req.get('host');
-
       isSameOrigin =
-        parsedOrigin.host === requestHost &&
+        parsedOrigin.host === req.get('host') &&
         (process.env.NODE_ENV !== 'production' ||
           parsedOrigin.protocol === 'https:' );
     } catch {
@@ -49,7 +46,6 @@ app.use('/api', (req, res, next) => {
       return res.status(403).json({ error: 'Origin is not allowed.' });
     }
 
-    // Same-origin requests do not need CORS response headers.
     if (!isSameOrigin) {
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Vary', 'Origin');
@@ -58,21 +54,26 @@ app.use('/api', (req, res, next) => {
     }
   }
 
-  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
   next();
 });
 
 app.use(express.json({ limit: '32kb' }));
 
-app.get('/api/health', (_req, res) =>
+app.get('/api/health', (_req, res) => {
   res.json({
     ok: true,
     service: 'grantly-api',
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'demo',
-  }),
-);
+  });
+});
 
-app.get('/api/scholarships', (_req, res) => res.json(scholarships));
+app.get('/api/scholarships', (_req, res) => {
+  res.json(scholarships);
+});
 
 app.get('/api/scholarships/:id', (req, res) => {
   const item = scholarships.find(
@@ -86,12 +87,17 @@ app.get('/api/scholarships/:id', (req, res) => {
   return res.json(item);
 });
 
-app.get('/api/notices', (_req, res) => res.json(notices));
-app.get('/api/resources', (_req, res) => res.json(resources));
+app.get('/api/notices', (_req, res) => {
+  res.json(notices);
+});
 
-app.use('/api', (_req, res) =>
-  res.status(404).json({ error: 'API endpoint not found.' }),
-);
+app.get('/api/resources', (_req, res) => {
+  res.json(resources);
+});
+
+app.use('/api', (_req, res) => {
+  res.status(404).json({ error: 'API endpoint not found.' });
+});
 
 if (process.env.NODE_ENV === 'production') {
   const dist = path.join(root, 'dist');
@@ -99,7 +105,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(dist, { index: false, maxAge: '1h' }));
 
   app.get('/{*path}', (req, res, next) => {
-    if (req.path.startsWith('/api/')) return next();
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
 
     res.sendFile(path.join(dist, 'index.html'), (error) => {
       if (error) next(error);

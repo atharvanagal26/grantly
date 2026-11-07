@@ -170,3 +170,178 @@
     white-space: nowrap;
   }
 }
+
+/* src/index.css — append at the end */
+
+.top-ribbon {
+  flex-wrap: wrap;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.button:not(.button--large),
+.icon-button,
+.mobile-menu-button,
+.filter-toggle,
+.sidebar-link,
+.document-item {
+  min-height: 44px;
+}
+
+.icon-button {
+  width: 44px;
+}
+
+.card-provider {
+  color: #60616e;
+  font-size: 10px;
+}
+
+.eligibility-summary {
+  min-height: 36px;
+  color: #626471;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.card-top-copy .demo-badge,
+.category-pill {
+  font-size: 9px;
+}
+
+.deadline-meta,
+.card-actions .text-action {
+  font-size: 10px;
+}
+
+.page-description,
+.catalogue-note p,
+.results-bar {
+  color: #60616e;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.filter-grid label,
+.sort-control {
+  font-size: 11px;
+}
+
+.filter-grid select,
+.sort-control select {
+  min-height: 44px;
+  font-size: 12px;
+}
+
+@media (min-width: 681px) and (max-width: 900px) {
+  .feature-grid,
+  .filter-grid,
+  .admin-create-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .featured-scholarships {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .featured-scholarships .scholarship-card:last-child {
+    display: flex;
+  }
+}
+
+@media (min-width: 681px) and (max-width: 760px) {
+  .public-header__inner {
+    width: calc(100% - 32px);
+    height: 61px;
+  }
+
+  .mobile-menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .public-nav {
+    position: absolute;
+    top: 61px;
+    right: 0;
+    left: 0;
+    display: none;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px 16px 16px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+    box-shadow: 0 14px 19px rgba(37, 38, 65, .08);
+  }
+
+  .public-nav.is-open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .public-nav > a:not(.button) {
+    min-height: 44px;
+    padding: 11px 5px;
+    border-bottom: 1px solid #f0efeb;
+  }
+
+  .public-nav .nav-signin {
+    margin: 0;
+  }
+
+  .public-nav .button {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard-grid--equal,
+  .dashboard-grid--wide-left,
+  .detail-side-column {
+    grid-template-columns: 1fr;
+  }
+
+  .page-content {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+@media (max-width: 680px) {
+  .search-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .search-box {
+    min-width: 0;
+    grid-column: 1;
+    height: 44px;
+  }
+
+  .search-box input {
+    min-height: 44px;
+    font-size: 12px;
+  }
+
+  .filter-toggle {
+    grid-column: 2;
+    min-height: 44px;
+  }
+
+  .sort-control {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 44px;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-grid,
+  .admin-create-form {
+    grid-template-columns: 1fr;
+  }
+}
