@@ -1,0 +1,20 @@
+FROM node:20-alpine AS build
+WORKDIR /app
+RUN corepack enable
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm build
+
+FROM node:20-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+RUN corepack enable
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --prod --frozen-lockfile
+COPY server ./server
+COPY src/data ./src/data
+COPY dist ./dist
+ENV PORT=3000
+EXPOSE 3000
+CMD ["pnpm", "start"]
